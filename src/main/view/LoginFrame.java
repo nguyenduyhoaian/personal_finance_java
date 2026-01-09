@@ -1,7 +1,7 @@
 package main.view;
 
 import main.controller.AuthController;
-import main.personalfinance.model.User;
+import main.model.User;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

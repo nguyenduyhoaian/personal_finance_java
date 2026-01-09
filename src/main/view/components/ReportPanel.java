@@ -2,6 +2,8 @@ package main.view.components;
 
 import main.controller.AuthController;
 import main.controller.TransactionController;
+import main.model.Transaction;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -13,8 +15,6 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 public class ReportPanel extends JPanel {
     private JComboBox<String> reportTypeCombo;
@@ -515,10 +515,10 @@ public class ReportPanel extends JPanel {
         BigDecimal highestExpense = BigDecimal.ZERO;
 
         // Get transactions for the period
-        List<main.personalfinance.model.Transaction> transactions =
+        List<Transaction> transactions =
                 TransactionController.getTransactionsByUser(userId, startDate, endDate);
 
-        for (main.personalfinance.model.Transaction t : transactions) {
+        for (Transaction t : transactions) {
             if (t.getType().equals("INCOME")) {
                 totalIncome = totalIncome.add(t.getAmount());
                 if (t.getAmount().compareTo(highestIncome) > 0) {

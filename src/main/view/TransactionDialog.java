@@ -2,13 +2,11 @@ package main.view;
 
 import main.controller.AuthController;
 import main.controller.TransactionController;
-import main.personalfinance.model.Category;
-import main.personalfinance.model.Transaction;
-import main.view.components.TransactionPanel;
+import main.model.Category;
+import main.model.Transaction;
+// import main.view.components.TransactionPanel; // Xóa dòng này để tránh phụ thuộc ngược
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +20,9 @@ public class TransactionDialog extends JDialog {
     private boolean success = false;
     private Transaction transaction;
 
+    // Khởi tạo Controller để sử dụng các hàm xử lý dữ liệu
+    private TransactionController controller = new TransactionController();
+
     public TransactionDialog(JFrame parent, Transaction transaction, String title) {
         super(parent, title, true);
         this.transaction = transaction;
@@ -31,6 +32,8 @@ public class TransactionDialog extends JDialog {
         setResizable(false);
 
         initComponents();
+
+        // Load data nếu là chế độ Edit
         if (transaction != null) {
             loadTransactionData();
         }
@@ -106,11 +109,11 @@ public class TransactionDialog extends JDialog {
         btnSave = new JButton("Lưu");
         btnCancel = new JButton("Hủy");
 
-        btnSave.setBackground(new Color(46, 204, 113));
+        btnSave.setBackground(new Color(46, 204, 113)); // Green
         btnSave.setForeground(Color.WHITE);
         btnSave.setFocusPainted(false);
 
-        btnCancel.setBackground(new Color(231, 76, 60));
+        btnCancel.setBackground(new Color(231, 76, 60)); // Red
         btnCancel.setForeground(Color.WHITE);
         btnCancel.setFocusPainted(false);
 
@@ -122,8 +125,6 @@ public class TransactionDialog extends JDialog {
         // Event handlers
         btnSave.addActionListener(e -> saveTransaction());
         btnCancel.addActionListener(e -> dispose());
-
-        // Enter key to save
         txtAmount.addActionListener(e -> saveTransaction());
 
         add(mainPanel);
@@ -133,15 +134,23 @@ public class TransactionDialog extends JDialog {
     }
 
     private void updateCategories() {
+        // Lấy loại category (INCOME/EXPENSE)
         String type = cmbType.getSelectedItem().equals("Thu nhập") ? "INCOME" : "EXPENSE";
-        List<Category> categories = TransactionPanel.getCategories(type);
+
+        // GỌI CONTROLLER ĐỂ LẤY DỮ LIỆU (Thay vì gọi TransactionPanel)
+        // Lưu ý: controller.getCategories() hiện đang lấy all, bạn có thể cần lọc theo type
+        // ở phía client hoặc viết thêm hàm getCategoriesByType trong Controller.
+        // Tạm thời lọc ở đây:
+        List<Category> allCategories = controller.getCategories();
 
         cmbCategory.removeAllItems();
-        for (Category category : categories) {
-            cmbCategory.addItem(category.getName());
+        for (Category category : allCategories) {
+            if (category.getType().equals(type)) {
+                cmbCategory.addItem(category.getName());
+            }
         }
 
-        if (categories.size() > 0) {
+        if (cmbCategory.getItemCount() > 0) {
             cmbCategory.setSelectedIndex(0);
         }
     }
@@ -155,7 +164,8 @@ public class TransactionDialog extends JDialog {
                 JOptionPane.QUESTION_MESSAGE);
 
         if (categoryName != null && !categoryName.trim().isEmpty()) {
-            if (TransactionPanel.addCategory(categoryName.trim(), type)) {
+            // GỌI CONTROLLER ĐỂ LƯU CATEGORY
+            if (controller.addCategory(categoryName.trim(), type)) {
                 updateCategories();
                 cmbCategory.setSelectedItem(categoryName.trim());
                 JOptionPane.showMessageDialog(this,
@@ -174,13 +184,13 @@ public class TransactionDialog extends JDialog {
     private void loadTransactionData() {
         if (transaction != null) {
             cmbType.setSelectedItem(transaction.getType().equals("INCOME") ? "Thu nhập" : "Chi tiêu");
-            updateCategories(); // This will load categories for the type
+            updateCategories();
 
-            // Need to wait for categories to load before setting the selected category
             SwingUtilities.invokeLater(() -> {
-                // Find and select the category
                 String type = transaction.getType().equals("INCOME") ? "INCOME" : "EXPENSE";
-                List<Category> categories = TransactionPanel.getCategories(type);
+                // Dùng Controller
+                List<Category> categories = controller.getCategories();
+
                 for (Category cat : categories) {
                     if (cat.getId() == transaction.getCategoryId()) {
                         cmbCategory.setSelectedItem(cat.getName());
@@ -197,30 +207,20 @@ public class TransactionDialog extends JDialog {
 
     private void saveTransaction() {
         try {
-            // Validate input
             if (cmbCategory.getSelectedItem() == null) {
-                JOptionPane.showMessageDialog(this,
-                        "Vui lòng chọn danh mục!",
-                        "Lỗi",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn danh mục!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             String amountStr = txtAmount.getText().trim();
             if (amountStr.isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                        "Vui lòng nhập số tiền!",
-                        "Lỗi",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập số tiền!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             BigDecimal amount = new BigDecimal(amountStr);
             if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                JOptionPane.showMessageDialog(this,
-                        "Số tiền phải lớn hơn 0!",
-                        "Lỗi",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Số tiền phải lớn hơn 0!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -231,24 +231,21 @@ public class TransactionDialog extends JDialog {
                 date = LocalDate.now();
             }
 
-            // Get category ID
             String type = cmbType.getSelectedItem().equals("Thu nhập") ? "INCOME" : "EXPENSE";
             String categoryName = (String) cmbCategory.getSelectedItem();
-            List<Category> categories = TransactionPanel.getCategories(type);
-            int categoryId = -1;
 
+            // Tìm ID của category đã chọn
+            List<Category> categories = controller.getCategories();
+            int categoryId = -1;
             for (Category cat : categories) {
-                if (cat.getName().equals(categoryName)) {
+                if (cat.getName().equals(categoryName) && cat.getType().equals(type)) {
                     categoryId = cat.getId();
                     break;
                 }
             }
 
             if (categoryId == -1) {
-                JOptionPane.showMessageDialog(this,
-                        "Danh mục không hợp lệ!",
-                        "Lỗi",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Danh mục không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -261,45 +258,35 @@ public class TransactionDialog extends JDialog {
                         userId, categoryId, amount, description, date, type
                 );
 
-                if (TransactionController.addTransaction(newTransaction)) {
+                // GỌI CONTROLLER
+                if (controller.addTransaction(newTransaction)) {
                     success = true;
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(this,
-                            "Thêm giao dịch thất bại!",
-                            "Lỗi",
-                            JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Thêm giao dịch thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                // Update existing transaction
+                // Update transaction
                 transaction.setCategoryId(categoryId);
                 transaction.setAmount(amount);
                 transaction.setDescription(description);
                 transaction.setTransactionDate(date);
                 transaction.setType(type);
 
-                if (TransactionController.updateTransaction(transaction)) {
+                // GỌI CONTROLLER
+                if (controller.updateTransaction(transaction)) {
                     success = true;
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(this,
-                            "Sửa giao dịch thất bại!",
-                            "Lỗi",
-                            JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Sửa giao dịch thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             }
 
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this,
-                    "Số tiền không hợp lệ!",
-                    "Lỗi",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số tiền không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this,
-                    "Có lỗi xảy ra: " + e.getMessage(),
-                    "Lỗi",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Có lỗi xảy ra: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 

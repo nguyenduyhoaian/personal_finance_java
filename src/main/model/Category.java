@@ -1,4 +1,4 @@
-package main.personalfinance.model;
+package main.model;
 
 public class Category {
     private int id;

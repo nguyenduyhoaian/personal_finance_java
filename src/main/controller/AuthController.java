@@ -1,7 +1,7 @@
 package main.controller;
 
-import main.personalfinance.model.User;
-import main.personalfinance.model.Database;
+import main.model.User;
+import main.dao.Database;
 import java.sql.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
