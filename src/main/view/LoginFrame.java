@@ -94,8 +94,10 @@ public class LoginFrame extends JFrame {
 
         btnQuit.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {}
-        })
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        )
 
         // Enter key to login
         txtPassword.addActionListener(new ActionListener() {
