@@ -142,7 +142,7 @@ public class TransactionPanel extends JPanel {
     private JButton createButton(String text, Color bg) {
         JButton btn = new JButton(text);
         btn.setBackground(bg);
-        btn.setForeground(Color.WHITE);
+        //btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
         return btn;
     }

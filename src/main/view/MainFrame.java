@@ -92,7 +92,7 @@ public class MainFrame extends JFrame {
         btnLogout = createMenuButton("🚪 Đăng xuất");
 
         btnDashboard.setBackground(new Color(0, 102, 204));
-        btnDashboard.setForeground(Color.WHITE);
+        //btnDashboard.setForeground(Color.WHITE);
 
         // Add buttons to sidebar
         sidebarPanel.add(btnDashboard);
@@ -109,7 +109,7 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 resetButtonColors();
                 btnDashboard.setBackground(new Color(0, 102, 204));
-                btnDashboard.setForeground(Color.WHITE);
+                //btnDashboard.setForeground(Color.WHITE);
                 cardLayout.show(mainContentPanel, "DASHBOARD");
                 ((DashboardPanel) mainContentPanel.getComponent(0)).refreshData();
             }
@@ -120,7 +120,7 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 resetButtonColors();
                 btnTransactions.setBackground(new Color(0, 102, 204));
-                btnTransactions.setForeground(Color.WHITE);
+                //btnTransactions.setForeground(Color.WHITE);
                 cardLayout.show(mainContentPanel, "TRANSACTIONS");
                 ((TransactionPanel) mainContentPanel.getComponent(1)).refreshTable();
             }
@@ -131,7 +131,7 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 resetButtonColors();
                 btnReports.setBackground(new Color(0, 102, 204));
-                btnReports.setForeground(Color.WHITE);
+                //btnReports.setForeground(Color.WHITE);
                 cardLayout.show(mainContentPanel, "REPORTS");
                 ((ReportPanel) mainContentPanel.getComponent(2)).refreshCharts();
             }

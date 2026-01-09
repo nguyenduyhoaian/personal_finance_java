@@ -110,11 +110,11 @@ public class TransactionDialog extends JDialog {
         btnCancel = new JButton("Hủy");
 
         btnSave.setBackground(new Color(46, 204, 113)); // Green
-        btnSave.setForeground(Color.WHITE);
+        //btnSave.setForeground(Color.WHITE);
         btnSave.setFocusPainted(false);
 
         btnCancel.setBackground(new Color(231, 76, 60)); // Red
-        btnCancel.setForeground(Color.WHITE);
+        //btnCancel.setForeground(Color.WHITE);
         btnCancel.setFocusPainted(false);
 
         buttonPanel.add(btnSave);
