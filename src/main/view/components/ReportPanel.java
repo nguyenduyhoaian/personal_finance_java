@@ -488,7 +488,7 @@ public class ReportPanel extends JPanel {
 
         // Update trend table
         JPanel trendPanel = (JPanel) chartPanel.getComponent(2);
-        JScrollPane trendScrollPane = (JScrollPane) ((JPanel) trendPanel.getComponents());
+        JScrollPane trendScrollPane = (JScrollPane) trendPanel.getComponent(1);
         JTable trendTable = (JTable) trendScrollPane.getViewport().getView();
         updateTrendTable((DefaultTableModel) trendTable.getModel());
 
