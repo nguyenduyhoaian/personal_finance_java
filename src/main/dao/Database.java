@@ -14,10 +14,7 @@ public class Database {
         initializeDatabase();
     }
 
-    /**
-     * Cung cấp kết nối tới cơ sở dữ liệu
-     * Được sử dụng bởi AuthController và các Controller khác
-     */
+    // Cung cấp kết nối tới cơ sở dữ liệu
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL);
     }
@@ -45,6 +42,7 @@ public class Database {
                     + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + "name TEXT NOT NULL, "
                     + "type TEXT NOT NULL" // INCOME hoặc EXPENSE
+                    + "budget_limit DECIMAL(15, 2) DEFAULT 0"
                     + ");";
             stmt.execute(createCategoriesTable);
 
@@ -61,6 +59,19 @@ public class Database {
                     + "FOREIGN KEY (category_id) REFERENCES categories(id)"
                     + ");";
             stmt.execute(createTransactionsTable);
+
+            //Tạo bảng recurring_tasks
+            String createRecurringTable = "CREATE TABLE IF NOT EXISTS recurring_tasks ("
+                    + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "user_id INTEGER, "
+                    + "category_id INTEGER, "
+                    + "amount DECIMAL(15, 2) NOT NULL, "
+                    + "description TEXT, "
+                    + "day_of_month INTEGER NOT NULL, " // Ngày thực hiện (1-31)
+                    + "last_executed_month TEXT, " // Lưu tháng gần nhất đã chạy (dạng "MM/yyyy")
+                    + "FOREIGN KEY (user_id) REFERENCES users(id)"
+                    + ");";
+            stmt.execute(createRecurringTable);
 
             // Thêm dữ liệu mẫu cho Category nếu bảng trống
             seedCategories(stmt);

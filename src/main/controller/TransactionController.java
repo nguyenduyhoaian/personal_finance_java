@@ -176,6 +176,48 @@ private static Transaction mapResultSetToTransaction(ResultSet rs) throws SQLExc
     }
 
     /**
+     * Lấy danh sách tình trạng ngân sách theo tháng hiện tại
+     * Trả về List các mảng object: [Tên danh mục, Đã chi, Hạn mức]
+     */
+    public static List<Object[]> getBudgetStatus(int userId, int month, int year) {
+        List<Object[]> list = new ArrayList<>();
+        String sql = "SELECT c.name, c.budget_limit, SUM(t.amount) as spent " +
+                "FROM categories c " +
+                "LEFT JOIN transactions t ON c.id = t.category_id " +
+                "AND strftime('%m', t.transaction_date) = ? " + // Lọc theo tháng
+                "AND strftime('%Y', t.transaction_date) = ? " + // Lọc theo năm
+                "WHERE c.type = 'EXPENSE' " +
+                "GROUP BY c.id, c.name, c.budget_limit " +
+                "HAVING c.budget_limit > 0"; // Chỉ lấy danh mục có đặt hạn mức
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // Format tháng thành 2 chữ số (ví dụ: "01", "12")
+            String monthStr = String.format("%02d", month);
+            String yearStr = String.valueOf(year);
+
+            pstmt.setString(1, monthStr);
+            pstmt.setString(2, yearStr);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                String name = rs.getString("name");
+                BigDecimal limit = rs.getBigDecimal("budget_limit");
+                BigDecimal spent = rs.getBigDecimal("spent");
+                if (spent == null) spent = BigDecimal.ZERO;
+
+                list.add(new Object[]{name, spent, limit});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+
+
+    /**
      * Lấy danh sách toàn bộ giao dịch của một người dùng cụ thể.
      * Có JOIN với bảng categories để lấy tên danh mục.
      */
@@ -215,6 +257,8 @@ private static Transaction mapResultSetToTransaction(ResultSet rs) throws SQLExc
         }
         return list;
     }
+
+
 
     /**
      * Thêm mới một giao dịch

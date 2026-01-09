@@ -1,10 +1,13 @@
 package main.model;
 
+import java.math.BigDecimal;
+
 public class Category {
     private int id;
     private String name;
     private String type; // "INCOME" or "EXPENSE"
     private Integer userId;
+    private BigDecimal budgetLimit = BigDecimal.ZERO;
 
     // Constructors
     public Category() {}
@@ -26,4 +29,7 @@ public class Category {
 
     public Integer getUserId() { return userId; }
     public void setUserId(Integer userId) { this.userId = userId; }
+
+    public BigDecimal getBudgetLimit() { return budgetLimit; }
+    public void setBudgetLimit(BigDecimal budgetLimit) { this.budgetLimit = budgetLimit; }
 }

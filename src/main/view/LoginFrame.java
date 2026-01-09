@@ -4,8 +4,6 @@ import main.controller.AuthController;
 import main.model.User;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class LoginFrame extends JFrame {
     private JTextField txtUsername;
@@ -13,29 +11,34 @@ public class LoginFrame extends JFrame {
     private JButton btnLogin, btnRegister, btnQuit;
 
     public LoginFrame() {
-        setTitle("Đăng nhập - Quản lý thu chi cá nhân");
+        setTitle("Đăng nhập - Quản lý thu chi");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
+        setSize(400, 320); // Tăng chiều cao xíu cho thoáng
         setLocationRelativeTo(null);
         setResizable(false);
+
+        // Icon ứng dụng (nếu có sau này)
+        // setIconImage(Toolkit.getDefaultToolkit().getImage("icon.png"));
 
         initComponents();
     }
 
     private void initComponents() {
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+        mainPanel.setBackground(Color.WHITE); // Nền trắng cho sạch sẽ
 
         // Header
-        JLabel lblTitle = new JLabel("QUẢN LÝ THU CHI CÁ NHÂN", SwingConstants.CENTER);
-        lblTitle.setFont(new Font("Arial", Font.BOLD, 18));
-        lblTitle.setForeground(new Color(0, 102, 204));
+        JLabel lblTitle = new JLabel("ĐĂNG NHẬP", SwingConstants.CENTER);
+        lblTitle.setFont(new Font("Arial", Font.BOLD, 22));
+        lblTitle.setForeground(new Color(41, 128, 185)); // Màu xanh chủ đạo
         mainPanel.add(lblTitle, BorderLayout.NORTH);
 
         // Form panel
         JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(Color.WHITE);
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(10, 5, 10, 5); // Tăng khoảng cách giữa các dòng
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Username
@@ -58,18 +61,11 @@ public class LoginFrame extends JFrame {
 
         // Button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        btnLogin = new JButton("Đăng nhập");
-        btnRegister = new JButton("Đăng ký");
-        btnQuit = new JButton("Thoát");
+        buttonPanel.setBackground(Color.WHITE);
 
-        btnLogin.setBackground(Color.GREEN);
-        btnLogin.setFocusPainted(false);
-
-        btnRegister.setBackground(Color.BLUE);
-        btnRegister.setFocusPainted(false);
-
-        btnQuit.setBackground(Color.RED);
-        btnQuit.setFocusPainted(false);
+        btnLogin = createButton("Đăng nhập", new Color(46, 204, 113));
+        btnRegister = createButton("Đăng ký", new Color(52, 152, 219));
+        btnQuit = createButton("Thoát", new Color(231, 76, 60));
 
         buttonPanel.add(btnLogin);
         buttonPanel.add(btnRegister);
@@ -77,37 +73,33 @@ public class LoginFrame extends JFrame {
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Event handlers
-        btnLogin.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                login();
-            }
-        });
+        // --- Xử lý sự kiện (Event Handlers) ---
 
-        btnRegister.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openRegisterFrame();
-            }
-        });
+        // Nhấn nút Đăng nhập
+        btnLogin.addActionListener(e -> login());
 
-        btnQuit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        )
+        // Mở form Đăng ký
+        btnRegister.addActionListener(e -> openRegisterFrame());
 
-        // Enter key to login
-        txtPassword.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                login();
-            }
-        });
+        // Thoát
+        btnQuit.addActionListener(e -> System.exit(0));
+
+        // UX: Nhấn Enter ở ô Password hoặc Username đều kích hoạt đăng nhập
+        txtPassword.addActionListener(e -> login());
+        txtUsername.addActionListener(e -> login());
 
         add(mainPanel);
+    }
+
+    // Hàm tạo nút chung để đồng bộ giao diện
+    private JButton createButton(String text, Color bg) {
+        JButton btn = new JButton(text);
+        btn.setBackground(bg);
+        //btn.setForeground(Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.setFont(new Font("Arial", Font.BOLD, 12));
+        btn.setPreferredSize(new Dimension(100, 35));
+        return btn;
     }
 
     private void login() {
@@ -115,39 +107,28 @@ public class LoginFrame extends JFrame {
         String password = new String(txtPassword.getPassword());
 
         if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Vui lòng nhập đầy đủ thông tin!",
-                    "Lỗi",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         User user = AuthController.login(username, password);
         if (user != null) {
-            JOptionPane.showMessageDialog(this,
-                    "Đăng nhập thành công! Chào mừng " + user.getFullName(),
-                    "Thành công",
-                    JOptionPane.INFORMATION_MESSAGE);
-
-            // Open main application
+            // Đăng nhập thành công -> Mở MainFrame
             new MainFrame().setVisible(true);
-            dispose();
+            this.dispose(); // Đóng hẳn LoginFrame
         } else {
-            JOptionPane.showMessageDialog(this,
-                    "Tên đăng nhập hoặc mật khẩu không đúng!",
-                    "Lỗi đăng nhập",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không đúng!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void openRegisterFrame() {
-        RegisterFrame registerFrame = new RegisterFrame(this);
-        registerFrame.setVisible(true);
-        setEnabled(false);
+        new RegisterFrame(this).setVisible(true);
+        this.setVisible(false);
     }
 
     public void enableLoginFrame() {
-        setEnabled(true);
-        toFront();
+        this.setVisible(true);
+        // Xóa trắng mật khẩu khi quay lại để bảo mật
+        txtPassword.setText("");
     }
 }

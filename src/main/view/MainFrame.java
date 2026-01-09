@@ -1,6 +1,7 @@
 package main.view;
 
 import main.controller.AuthController;
+import main.controller.RecurringService;
 import main.view.components.DashboardPanel;
 import main.view.components.TransactionPanel;
 import main.view.components.ReportPanel;
@@ -21,6 +22,12 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
 
         initComponents();
+
+        SwingUtilities.invokeLater(() -> {
+            RecurringService.checkAndExecuteTasks(AuthController.getCurrentUser().getId());
+            // Sau khi chạy xong, refresh lại dashboard để thấy thay đổi (nếu có)
+            ((DashboardPanel)mainContentPanel.getComponent(0)).refreshData();
+        });
     }
 
     private void initComponents() {
