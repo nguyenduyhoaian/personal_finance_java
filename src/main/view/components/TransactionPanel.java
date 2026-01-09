@@ -417,8 +417,7 @@ public class TransactionPanel extends JPanel {
     }
 
     private void updateSummary(BigDecimal totalIncome, BigDecimal totalExpense) {
-        Component[] components = ((JPanel) getComponent(2)).getComponent(1).getComponents();
-        JPanel summaryPanel = (JPanel) components[1];
+        JPanel summaryPanel = (JPanel) ((JPanel) getComponent(2)).getComponent(1);
         summaryPanel.removeAll();
 
         BigDecimal balance = totalIncome.subtract(totalExpense);

@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -165,7 +166,7 @@ public class ReportPanel extends JPanel {
             String category = (String) row[0];
             BigDecimal amount = (BigDecimal) row[1];
             BigDecimal percentage = totalExpense.compareTo(BigDecimal.ZERO) > 0 ?
-                    amount.multiply(BigDecimal.valueOf(100)).divide(totalExpense, 1, BigDecimal.ROUND_HALF_UP) :
+                    amount.multiply(BigDecimal.valueOf(100)).divide(totalExpense, 1, RoundingMode.HALF_UP) :
                     BigDecimal.ZERO;
 
             Object[] tableRow = {
@@ -282,13 +283,13 @@ public class ReportPanel extends JPanel {
         JProgressBar balanceBar = new JProgressBar(0, 100);
         if (totalIncome.compareTo(BigDecimal.ZERO) > 0) {
             int balancePercent = balance.multiply(BigDecimal.valueOf(100))
-                    .divide(totalIncome, 0, BigDecimal.ROUND_HALF_UP).intValue();
+                    .divide(totalIncome, 0, RoundingMode.HALF_UP).intValue();
             balanceBar.setValue(Math.max(0, balancePercent));
         }
         balanceBar.setForeground(new Color(52, 152, 219));
         balanceBar.setString("Tỷ lệ tiết kiệm: " + (totalIncome.compareTo(BigDecimal.ZERO) > 0 ?
                 balance.multiply(BigDecimal.valueOf(100))
-                        .divide(totalIncome, 1, BigDecimal.ROUND_HALF_UP) + "%" : "0%"));
+                        .divide(totalIncome, 1, RoundingMode.HALF_UP) + "%" : "0%"));
         balanceBar.setStringPainted(true);
         panel.add(balanceBar, gbc);
 
@@ -355,7 +356,7 @@ public class ReportPanel extends JPanel {
             String savingsRate = "0%";
             if (monthlyIncome.compareTo(BigDecimal.ZERO) > 0) {
                 BigDecimal rate = monthlyBalance.multiply(BigDecimal.valueOf(100))
-                        .divide(monthlyIncome, 1, BigDecimal.ROUND_HALF_UP);
+                        .divide(monthlyIncome, 1, RoundingMode.HALF_UP);
                 savingsRate = rate + "%";
             }
 
@@ -379,7 +380,7 @@ public class ReportPanel extends JPanel {
         String grandTotalSavingsRate = "0%";
         if (grandTotalIncome.compareTo(BigDecimal.ZERO) > 0) {
             BigDecimal rate = grandTotalBalance.multiply(BigDecimal.valueOf(100))
-                    .divide(grandTotalIncome, 1, BigDecimal.ROUND_HALF_UP);
+                    .divide(grandTotalIncome, 1, RoundingMode.HALF_UP);
             grandTotalSavingsRate = rate + "%";
         }
 
@@ -473,10 +474,10 @@ public class ReportPanel extends JPanel {
         }
     }
 
-    private void refreshCharts() {
+    public void refreshCharts() {
         // Update expense table
         JPanel tablePanel = (JPanel) chartPanel.getComponent(0);
-        JScrollPane scrollPane = (JScrollPane) ((JPanel) tablePanel.getComponent(1));
+        JScrollPane scrollPane = (JScrollPane) tablePanel.getComponent(1);
         JTable table = (JTable) scrollPane.getViewport().getView();
         updateExpenseTable((DefaultTableModel) table.getModel());
 
@@ -487,7 +488,7 @@ public class ReportPanel extends JPanel {
 
         // Update trend table
         JPanel trendPanel = (JPanel) chartPanel.getComponent(2);
-        JScrollPane trendScrollPane = (JScrollPane) ((JPanel) trendPanel.getComponent(1));
+        JScrollPane trendScrollPane = (JScrollPane) ((JPanel) trendPanel.getComponents());
         JTable trendTable = (JTable) trendScrollPane.getViewport().getView();
         updateTrendTable((DefaultTableModel) trendTable.getModel());
 
@@ -532,8 +533,8 @@ public class ReportPanel extends JPanel {
         }
 
         // Calculate averages (per month)
-        BigDecimal avgIncome = totalIncome.divide(BigDecimal.valueOf(6), BigDecimal.ROUND_HALF_UP);
-        BigDecimal avgExpense = totalExpense.divide(BigDecimal.valueOf(6), BigDecimal.ROUND_HALF_UP);
+        BigDecimal avgIncome = totalIncome.divide(BigDecimal.valueOf(6), RoundingMode.HALF_UP);
+        BigDecimal avgExpense = totalExpense.divide(BigDecimal.valueOf(6), RoundingMode.HALF_UP);
 
         // Update stat cards
         updateStatCard(0, formatCurrency(avgIncome));
@@ -641,7 +642,7 @@ public class ReportPanel extends JPanel {
             String category = (String) row[0];
             BigDecimal amount = (BigDecimal) row[1];
             BigDecimal percentage = amount.multiply(BigDecimal.valueOf(100))
-                    .divide(totalExpenseForCategories, 1, BigDecimal.ROUND_HALF_UP);
+                    .divide(totalExpenseForCategories, 1, RoundingMode.HALF_UP);
 
             html.append("        <tr>\n")
                     .append("            <td>").append(counter++).append("</td>\n")
