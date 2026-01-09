@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 public class Database {
     // Tên file cơ sở dữ liệu SQLite
-    private static final String URL = "jdbc:sqlite:/database/personal_finance.db";
+    private static final String URL = "jdbc:sqlite:src/database/personal_finance.db";
 
     static {
         // Tự động khởi tạo các bảng khi lớp Database được load

@@ -69,6 +69,8 @@ public class LoginFrame extends JFrame {
         btnRegister.setForeground(Color.WHITE);
         btnRegister.setFocusPainted(false);
 
+        
+
         buttonPanel.add(btnLogin);
         buttonPanel.add(btnRegister);
 
