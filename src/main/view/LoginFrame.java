@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 public class LoginFrame extends JFrame {
     private JTextField txtUsername;
     private JPasswordField txtPassword;
-    private JButton btnLogin, btnRegister;
+    private JButton btnLogin, btnRegister, btnQuit;
 
     public LoginFrame() {
         setTitle("Đăng nhập - Quản lý thu chi cá nhân");
@@ -60,19 +60,20 @@ public class LoginFrame extends JFrame {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnLogin = new JButton("Đăng nhập");
         btnRegister = new JButton("Đăng ký");
+        btnQuit = new JButton("Thoát");
 
-        btnLogin.setBackground(new Color(0, 153, 76));
-        btnLogin.setForeground(Color.WHITE);
+        btnLogin.setBackground(Color.GREEN);
         btnLogin.setFocusPainted(false);
 
-        btnRegister.setBackground(new Color(51, 102, 204));
-        btnRegister.setForeground(Color.WHITE);
+        btnRegister.setBackground(Color.BLUE);
         btnRegister.setFocusPainted(false);
 
-        
+        btnQuit.setBackground(Color.RED);
+        btnQuit.setFocusPainted(false);
 
         buttonPanel.add(btnLogin);
         buttonPanel.add(btnRegister);
+        buttonPanel.add(btnQuit);
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
@@ -90,6 +91,11 @@ public class LoginFrame extends JFrame {
                 openRegisterFrame();
             }
         });
+
+        btnQuit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {}
+        })
 
         // Enter key to login
         txtPassword.addActionListener(new ActionListener() {
