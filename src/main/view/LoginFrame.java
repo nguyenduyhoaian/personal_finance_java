@@ -2,6 +2,7 @@ package main.view;
 
 import main.controller.AuthController;
 import main.model.User;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -42,18 +43,23 @@ public class LoginFrame extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Username
-        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
         formPanel.add(new JLabel("Tên đăng nhập:"), gbc);
 
-        gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 1.0;
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
         txtUsername = new JTextField(20);
         formPanel.add(txtUsername, gbc);
 
         // Password
-        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
         formPanel.add(new JLabel("Mật khẩu:"), gbc);
 
-        gbc.gridx = 1; gbc.gridy = 1;
+        gbc.gridx = 1;
+        gbc.gridy = 1;
         txtPassword = new JPasswordField(20);
         formPanel.add(txtPassword, gbc);
 

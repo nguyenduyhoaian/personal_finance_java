@@ -3,11 +3,7 @@ package main.controller;
 import main.dao.Database;
 import main.model.Category;
 import main.model.Transaction;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
@@ -16,7 +12,7 @@ import java.util.List;
 
 public class TransactionController {
 
-     // Hàm phụ trợ để tính tổng tiền theo loại (LƯU Ý SET Private)
+    // Hàm phụ trợ để tính tổng tiền theo loại (LƯU Ý SET Private)
     private static BigDecimal getTotalAmount(int userId, LocalDate startDate, LocalDate endDate, String type) {
         String sql = "SELECT SUM(amount) FROM transactions " +
                 "WHERE user_id = ? AND type = ? AND transaction_date BETWEEN ? AND ?";
@@ -83,96 +79,79 @@ public class TransactionController {
         return list;
     }
 
-/**
- * Lấy danh sách giao dịch gần đây (có giới hạn số lượng) cho Dashboard
- */
-public static List<Transaction> getRecentTransactions(int userId, int limit) {
-    List<Transaction> list = new ArrayList<>();
-    String sql = "SELECT t.*, c.name AS category_name " +
-            "FROM transactions t " +
-            "LEFT JOIN categories c ON t.category_id = c.id " +
-            "WHERE t.user_id = ? " +
-            "ORDER BY t.transaction_date DESC, t.id DESC " +
-            "LIMIT ?";
-
-    try (Connection conn = Database.getConnection();
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-        pstmt.setInt(1, userId);
-        pstmt.setInt(2, limit);
-        ResultSet rs = pstmt.executeQuery();
-
-        while (rs.next()) {
-            Transaction t = mapResultSetToTransaction(rs);
-            list.add(t);
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return list;
-}
-
-/**
- * Lấy danh sách giao dịch trong khoảng thời gian (cho ReportPanel)
- */
-public static List<Transaction> getTransactionsByUser(int userId, LocalDate startDate, LocalDate endDate) {
-    List<Transaction> list = new ArrayList<>();
-    String sql = "SELECT t.*, c.name AS category_name " +
-            "FROM transactions t " +
-            "LEFT JOIN categories c ON t.category_id = c.id " +
-            "WHERE t.user_id = ? " +
-            "AND t.transaction_date BETWEEN ? AND ? " +
-            "ORDER BY t.transaction_date DESC";
-
-    try (Connection conn = Database.getConnection();
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-        pstmt.setInt(1, userId);
-        pstmt.setDate(2, Date.valueOf(startDate));
-        pstmt.setDate(3, Date.valueOf(endDate));
-        ResultSet rs = pstmt.executeQuery();
-
-        while (rs.next()) {
-            Transaction t = mapResultSetToTransaction(rs);
-            list.add(t);
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return list;
-}
-
-/**
- * Hàm phụ trợ để map ResultSet sang Object (tránh lặp code)
- */
-private static Transaction mapResultSetToTransaction(ResultSet rs) throws SQLException {
-    Transaction t = new Transaction();
-    t.setId(rs.getInt("id"));
-    t.setUserId(rs.getInt("user_id"));
-    t.setCategoryId(rs.getInt("category_id"));
-    t.setAmount(rs.getBigDecimal("amount"));
-    t.setDescription(rs.getString("description"));
-    t.setTransactionDate(rs.getDate("transaction_date").toLocalDate());
-    t.setType(rs.getString("type"));
-    t.setCategoryName(rs.getString("category_name"));
-    return t;
-}
-
-    public boolean addCategory(String name, String type) {
-        String sql = "INSERT INTO categories (name, type) VALUES (?, ?)";
+    /**
+     * Lấy danh sách giao dịch gần đây (có giới hạn số lượng) cho Dashboard
+     */
+    public static List<Transaction> getRecentTransactions(int userId, int limit) {
+        List<Transaction> list = new ArrayList<>();
+        String sql = "SELECT t.*, c.name AS category_name " +
+                "FROM transactions t " +
+                "LEFT JOIN categories c ON t.category_id = c.id " +
+                "WHERE t.user_id = ? " +
+                "ORDER BY t.transaction_date DESC, t.id DESC " +
+                "LIMIT ?";
 
         try (Connection conn = Database.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, name);
-            pstmt.setString(2, type);
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, limit);
+            ResultSet rs = pstmt.executeQuery();
 
-            return pstmt.executeUpdate() > 0;
-
+            while (rs.next()) {
+                Transaction t = mapResultSetToTransaction(rs);
+                list.add(t);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return list;
+    }
+
+    /**
+     * Lấy danh sách giao dịch trong khoảng thời gian (cho ReportPanel)
+     */
+    public static List<Transaction> getTransactionsByUser(int userId, LocalDate startDate, LocalDate endDate) {
+        List<Transaction> list = new ArrayList<>();
+        String sql = "SELECT t.*, c.name AS category_name " +
+                "FROM transactions t " +
+                "LEFT JOIN categories c ON t.category_id = c.id " +
+                "WHERE t.user_id = ? " +
+                "AND t.transaction_date BETWEEN ? AND ? " +
+                "ORDER BY t.transaction_date DESC";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userId);
+            pstmt.setDate(2, Date.valueOf(startDate));
+            pstmt.setDate(3, Date.valueOf(endDate));
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Transaction t = mapResultSetToTransaction(rs);
+                list.add(t);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * Hàm phụ trợ để map ResultSet sang Object (tránh lặp code)
+     */
+    private static Transaction mapResultSetToTransaction(ResultSet rs) throws SQLException {
+        Transaction t = new Transaction();
+        t.setId(rs.getInt("id"));
+        t.setUserId(rs.getInt("user_id"));
+        t.setCategoryId(rs.getInt("category_id"));
+        t.setAmount(rs.getBigDecimal("amount"));
+        t.setDescription(rs.getString("description"));
+        t.setTransactionDate(rs.getDate("transaction_date").toLocalDate());
+        t.setType(rs.getString("type"));
+        t.setCategoryName(rs.getString("category_name"));
+        return t;
     }
 
     /**
@@ -214,51 +193,6 @@ private static Transaction mapResultSetToTransaction(ResultSet rs) throws SQLExc
         }
         return list;
     }
-
-
-
-    /**
-     * Lấy danh sách toàn bộ giao dịch của một người dùng cụ thể.
-     * Có JOIN với bảng categories để lấy tên danh mục.
-     */
-    public List<Transaction> getAllTransactions(int userId) {
-        List<Transaction> list = new ArrayList<>();
-        // Query kết hợp bảng transactions và categories để lấy category_name
-        String sql = "SELECT t.*, c.name AS category_name " +
-                "FROM transactions t " +
-                "LEFT JOIN categories c ON t.category_id = c.id " +
-                "WHERE t.user_id = ? " +
-                "ORDER BY t.transaction_date DESC, t.id DESC";
-
-        try (Connection conn = Database.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setInt(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                Transaction t = new Transaction();
-                t.setId(rs.getInt("id"));
-                t.setUserId(rs.getInt("user_id"));
-                t.setCategoryId(rs.getInt("category_id"));
-                t.setAmount(rs.getBigDecimal("amount")); //
-                t.setDescription(rs.getString("description"));
-                // Chuyển đổi java.sql.Date sang java.time.LocalDate
-                t.setTransactionDate(rs.getDate("transaction_date").toLocalDate()); //
-                t.setType(rs.getString("type"));
-
-                // Set tên category lấy từ bảng đã JOIN
-                t.setCategoryName(rs.getString("category_name")); //
-
-                list.add(t);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-
 
     /**
      * Thêm mới một giao dịch
@@ -329,6 +263,64 @@ private static Transaction mapResultSetToTransaction(ResultSet rs) throws SQLExc
             e.printStackTrace();
             return false;
         }
+    }
+
+    public boolean addCategory(String name, String type) {
+        String sql = "INSERT INTO categories (name, type) VALUES (?, ?)";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, name);
+            pstmt.setString(2, type);
+
+            return pstmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Lấy danh sách toàn bộ giao dịch của một người dùng cụ thể.
+     * Có JOIN với bảng categories để lấy tên danh mục.
+     */
+    public List<Transaction> getAllTransactions(int userId) {
+        List<Transaction> list = new ArrayList<>();
+        // Query kết hợp bảng transactions và categories để lấy category_name
+        String sql = "SELECT t.*, c.name AS category_name " +
+                "FROM transactions t " +
+                "LEFT JOIN categories c ON t.category_id = c.id " +
+                "WHERE t.user_id = ? " +
+                "ORDER BY t.transaction_date DESC, t.id DESC";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Transaction t = new Transaction();
+                t.setId(rs.getInt("id"));
+                t.setUserId(rs.getInt("user_id"));
+                t.setCategoryId(rs.getInt("category_id"));
+                t.setAmount(rs.getBigDecimal("amount")); //
+                t.setDescription(rs.getString("description"));
+                // Chuyển đổi java.sql.Date sang java.time.LocalDate
+                t.setTransactionDate(rs.getDate("transaction_date").toLocalDate()); //
+                t.setType(rs.getString("type"));
+
+                // Set tên category lấy từ bảng đã JOIN
+                t.setCategoryName(rs.getString("category_name")); //
+
+                list.add(t);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     /**

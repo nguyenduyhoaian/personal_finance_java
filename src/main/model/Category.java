@@ -10,7 +10,8 @@ public class Category {
     private BigDecimal budgetLimit = BigDecimal.ZERO;
 
     // Constructors
-    public Category() {}
+    public Category() {
+    }
 
     public Category(String name, String type) {
         this.name = name;
@@ -18,18 +19,43 @@ public class Category {
     }
 
     // Getters and Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    public String getName() {
+        return name;
+    }
 
-    public Integer getUserId() { return userId; }
-    public void setUserId(Integer userId) { this.userId = userId; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public BigDecimal getBudgetLimit() { return budgetLimit; }
-    public void setBudgetLimit(BigDecimal budgetLimit) { this.budgetLimit = budgetLimit; }
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public BigDecimal getBudgetLimit() {
+        return budgetLimit;
+    }
+
+    public void setBudgetLimit(BigDecimal budgetLimit) {
+        this.budgetLimit = budgetLimit;
+    }
 }

@@ -1,6 +1,7 @@
 package main;
 
 import main.view.LoginFrame;
+
 import javax.swing.*;
 
 public class Main {

@@ -227,18 +227,24 @@ public class ReportPanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Income section
-        gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.3;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.3;
         JLabel lblIncome = new JLabel("Thu nhập:");
         lblIncome.setFont(new Font("Arial", Font.BOLD, 14));
         panel.add(lblIncome, gbc);
 
-        gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 0.7;
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 0.7;
         JLabel lblIncomeValue = new JLabel(formatCurrency(totalIncome));
         lblIncomeValue.setFont(new Font("Arial", Font.BOLD, 14));
         lblIncomeValue.setForeground(new Color(46, 204, 113));
         panel.add(lblIncomeValue, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
         JProgressBar incomeBar = new JProgressBar(0, totalIncome.add(totalExpense).intValue());
         incomeBar.setValue(totalIncome.intValue());
         incomeBar.setForeground(new Color(46, 204, 113));
@@ -247,18 +253,22 @@ public class ReportPanel extends JPanel {
         panel.add(incomeBar, gbc);
 
         // Expense section
-        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
         JLabel lblExpense = new JLabel("Chi tiêu:");
         lblExpense.setFont(new Font("Arial", Font.BOLD, 14));
         panel.add(lblExpense, gbc);
 
-        gbc.gridx = 1; gbc.gridy = 2;
+        gbc.gridx = 1;
+        gbc.gridy = 2;
         JLabel lblExpenseValue = new JLabel(formatCurrency(totalExpense));
         lblExpenseValue.setFont(new Font("Arial", Font.BOLD, 14));
         lblExpenseValue.setForeground(new Color(231, 76, 60));
         panel.add(lblExpenseValue, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
         JProgressBar expenseBar = new JProgressBar(0, totalIncome.add(totalExpense).intValue());
         expenseBar.setValue(totalExpense.intValue());
         expenseBar.setForeground(new Color(231, 76, 60));
@@ -267,19 +277,23 @@ public class ReportPanel extends JPanel {
         panel.add(expenseBar, gbc);
 
         // Balance section
-        gbc.gridx = 0; gbc.gridy = 4;
+        gbc.gridx = 0;
+        gbc.gridy = 4;
         JLabel lblBalance = new JLabel("Số dư:");
         lblBalance.setFont(new Font("Arial", Font.BOLD, 14));
         panel.add(lblBalance, gbc);
 
-        gbc.gridx = 1; gbc.gridy = 4;
+        gbc.gridx = 1;
+        gbc.gridy = 4;
         BigDecimal balance = totalIncome.subtract(totalExpense);
         JLabel lblBalanceValue = new JLabel(formatCurrency(balance));
         lblBalanceValue.setFont(new Font("Arial", Font.BOLD, 14));
         lblBalanceValue.setForeground(new Color(52, 152, 219));
         panel.add(lblBalanceValue, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
         JProgressBar balanceBar = new JProgressBar(0, 100);
         if (totalIncome.compareTo(BigDecimal.ZERO) > 0) {
             int balancePercent = balance.multiply(BigDecimal.valueOf(100))

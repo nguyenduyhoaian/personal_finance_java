@@ -4,7 +4,7 @@ import main.controller.AuthController;
 import main.controller.TransactionController;
 import main.model.Category;
 import main.model.Transaction;
-// import main.view.components.TransactionPanel; // Xóa dòng này để tránh phụ thuộc ngược
+
 import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
@@ -51,20 +51,25 @@ public class TransactionDialog extends JDialog {
         gbc.anchor = GridBagConstraints.WEST;
 
         // Transaction type
-        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
         formPanel.add(new JLabel("Loại giao dịch:"), gbc);
 
-        gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 1.0;
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
         String[] types = {"Thu nhập", "Chi tiêu"};
         cmbType = new JComboBox<>(types);
         cmbType.addActionListener(e -> updateCategories());
         formPanel.add(cmbType, gbc);
 
         // Category
-        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
         formPanel.add(new JLabel("Danh mục:"), gbc);
 
-        gbc.gridx = 1; gbc.gridy = 1;
+        gbc.gridx = 1;
+        gbc.gridy = 1;
         JPanel categoryPanel = new JPanel(new BorderLayout(5, 0));
         cmbCategory = new JComboBox<>();
         categoryPanel.add(cmbCategory, BorderLayout.CENTER);
@@ -78,27 +83,33 @@ public class TransactionDialog extends JDialog {
         formPanel.add(categoryPanel, gbc);
 
         // Amount
-        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
         formPanel.add(new JLabel("Số tiền (VND):"), gbc);
 
-        gbc.gridx = 1; gbc.gridy = 2;
+        gbc.gridx = 1;
+        gbc.gridy = 2;
         txtAmount = new JTextField();
         formPanel.add(txtAmount, gbc);
 
         // Date
-        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridx = 0;
+        gbc.gridy = 3;
         formPanel.add(new JLabel("Ngày:"), gbc);
 
-        gbc.gridx = 1; gbc.gridy = 3;
+        gbc.gridx = 1;
+        gbc.gridy = 3;
         txtDate = new JFormattedTextField(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         txtDate.setValue(LocalDate.now());
         formPanel.add(txtDate, gbc);
 
         // Description
-        gbc.gridx = 0; gbc.gridy = 4;
+        gbc.gridx = 0;
+        gbc.gridy = 4;
         formPanel.add(new JLabel("Mô tả:"), gbc);
 
-        gbc.gridx = 1; gbc.gridy = 4;
+        gbc.gridx = 1;
+        gbc.gridy = 4;
         txtDescription = new JTextField();
         formPanel.add(txtDescription, gbc);
 

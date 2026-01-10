@@ -14,7 +14,8 @@ public class Transaction {
     private String categoryName;
 
     // Constructors
-    public Transaction() {}
+    public Transaction() {
+    }
 
     public Transaction(int userId, int categoryId, BigDecimal amount,
                        String description, LocalDate transactionDate, String type) {
@@ -27,29 +28,67 @@ public class Transaction {
     }
 
     // Getters and Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public int getCategoryId() { return categoryId; }
-    public void setCategoryId(int categoryId) { this.categoryId = categoryId; }
+    public int getUserId() {
+        return userId;
+    }
 
-    public BigDecimal getAmount() { return amount; }
-    public void setAmount(BigDecimal amount) { this.amount = amount; }
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public int getCategoryId() {
+        return categoryId;
+    }
 
-    public LocalDate getTransactionDate() { return transactionDate; }
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDate getTransactionDate() {
+        return transactionDate;
+    }
+
     public void setTransactionDate(LocalDate transactionDate) {
         this.transactionDate = transactionDate;
     }
 
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    public String getType() {
+        return type;
+    }
 
-    public String getCategoryName() { return categoryName; }
-    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 }

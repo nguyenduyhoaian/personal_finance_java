@@ -2,6 +2,7 @@ package main.view;
 
 import main.controller.AuthController;
 import main.model.User;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -89,11 +90,13 @@ public class RegisterFrame extends JFrame {
 
     // Hàm phụ trợ để thêm trường nhập liệu vào GridBagLayout cho gọn code
     private void addFormField(JPanel panel, GridBagConstraints gbc, String label, Component field, int row) {
-        gbc.gridx = 0; gbc.gridy = row;
+        gbc.gridx = 0;
+        gbc.gridy = row;
         gbc.weightx = 0;
         panel.add(new JLabel(label), gbc);
 
-        gbc.gridx = 1; gbc.gridy = row;
+        gbc.gridx = 1;
+        gbc.gridy = row;
         gbc.weightx = 1.0;
         panel.add(field, gbc);
     }

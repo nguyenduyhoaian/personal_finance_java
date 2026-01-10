@@ -3,6 +3,7 @@ package main.view.components;
 import main.controller.AuthController;
 import main.controller.TransactionController;
 import main.model.Transaction;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
