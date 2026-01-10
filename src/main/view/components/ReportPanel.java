@@ -100,7 +100,7 @@ public class ReportPanel extends JPanel {
     private JButton createButton(String text, Color bgColor) {
         JButton button = new JButton(text);
         button.setBackground(bgColor);
-        button.setForeground(Color.WHITE);
+        //button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         button.setFont(new Font("Arial", Font.PLAIN, 12));
