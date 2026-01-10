@@ -137,4 +137,12 @@ public class LoginFrame extends JFrame {
         // Xóa trắng mật khẩu khi quay lại để bảo mật
         txtPassword.setText("");
     }
+
+    //Nhận username từ RegisterFrame để tự động điền
+
+    public void setUsernameFromRegister(String username) {
+        txtUsername.setText(username);
+        txtPassword.setText(""); // Xóa password field
+        txtPassword.requestFocus(); // Focus vào password để người dùng nhập mật khẩu
+    }
 }

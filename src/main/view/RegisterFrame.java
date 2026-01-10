@@ -11,21 +11,20 @@ import java.awt.event.WindowEvent;
 public class RegisterFrame extends JFrame {
     private JTextField txtUsername, txtEmail, txtFullName;
     private JPasswordField txtPassword, txtConfirmPassword;
-    private JButton btnRegister, btnCancel;
-    private LoginFrame loginFrame;
+    private final LoginFrame loginFrame;
 
     public RegisterFrame(LoginFrame loginFrame) {
         this.loginFrame = loginFrame;
 
         setTitle("Đăng ký tài khoản");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(450, 450); // Tăng chiều cao để form thoáng hơn
+        setSize(450, 450);
         setLocationRelativeTo(null);
         setResizable(false);
 
         initComponents();
 
-        // Sự kiện khi bấm nút X trên cửa sổ -> Quay lại Login
+        // Sự kiện: Khi bấm nút X trên cửa sổ -> Quay lại Login
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
@@ -66,8 +65,8 @@ public class RegisterFrame extends JFrame {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         buttonPanel.setBackground(Color.WHITE);
 
-        btnRegister = createButton("Đăng ký ngay", new Color(39, 174, 96));
-        btnCancel = createButton("Hủy bỏ", new Color(192, 57, 43));
+        JButton btnRegister = createButton("Đăng ký ngay", new Color(39, 174, 96));
+        JButton btnCancel = createButton("Hủy bỏ", new Color(192, 57, 43));
 
         buttonPanel.add(btnRegister);
         buttonPanel.add(btnCancel);
@@ -104,7 +103,7 @@ public class RegisterFrame extends JFrame {
     private JButton createButton(String text, Color bg) {
         JButton btn = new JButton(text);
         btn.setBackground(bg);
-        btn.setForeground(Color.WHITE);
+        //btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
         btn.setFont(new Font("Arial", Font.BOLD, 12));
         btn.setPreferredSize(new Dimension(130, 35));
@@ -146,8 +145,10 @@ public class RegisterFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "Đăng ký thành công! Vui lòng đăng nhập.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
             dispose();
             loginFrame.enableLoginFrame();
-            // Tự động điền username vừa tạo vào form login cho tiện
-            // (Bạn có thể thêm phương thức setUsername cho LoginFrame nếu muốn)
+
+            // Tự động điền username vừa tạo vào form login
+            loginFrame.setUsernameFromRegister(username);
+
         } else {
             JOptionPane.showMessageDialog(this, "Đăng ký thất bại! Vui lòng thử lại.", "Lỗi hệ thống", JOptionPane.ERROR_MESSAGE);
         }
